@@ -677,7 +677,7 @@ public class TimeSeries extends Series implements Cloneable, Serializable {
      */
     public void add(RegularTimePeriod period, Number value) {
         // defer argument checking...
-        add(period, value, true);
+        add(period, value , true);
     }
 
     /**
@@ -1055,13 +1055,16 @@ public class TimeSeries extends Series implements Cloneable, Serializable {
         }
         TimeSeries copy = (TimeSeries) super.clone();
         copy.data = new java.util.ArrayList();
-        copy.minY = Double.NaN;
         copy.maxY = Double.NaN;
+        copy.minY = Double.NaN;
         if (this.data.size() > 0) {
             for (int index = start; index <= end; index++) {
                 TimeSeriesDataItem item
                         = (TimeSeriesDataItem) this.data.get(index);
                 TimeSeriesDataItem clone = (TimeSeriesDataItem) item.clone();
+                double y = Double.valueOf(clone.getValue().toString());
+                maxIgnoreNaN(copy.maxY, y);
+                minIgnoreNaN(copy.minY, y);
                 try {
                     copy.add(clone);
                 }
